@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rg/constants/theme.dart';
+import 'package:rg/screens/Login/Login.dart';
 import 'package:rg/screens/dashboard/dashboard.dart';
 import 'package:rg/screens/intro/welcome.dart';
 import 'package:rg/screens/tasks/list/camera.dart';
+import 'package:rg/screens/tasks/list/stock/stock.dart';
 import 'package:rg/screens/tasks/tasks.dart';
 
 class RouteGenerator {
@@ -17,6 +19,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Camera());
       case '/dashboard':
         return MaterialPageRoute(builder: (_) => DashboardScreen());
+      case '/login':
+        return MaterialPageRoute(builder: (_) => LoginScreen());
+      case '/stock_take':
+        return MaterialPageRoute(builder: (_) => StockTakeScreen());
       default:
         return _errorRoute();
     }
@@ -34,10 +40,9 @@ class RouteGenerator {
                 child: Text(
                   'Oops!',
                   style: TextStyle(
-                    color: KWhiteColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26.0
-                  ),
+                      color: KWhiteColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26.0),
                 ),
               ),
               SizedBox(height: 39),
@@ -52,10 +57,9 @@ class RouteGenerator {
                 child: Text(
                   'PAGE NOT FOUND!',
                   style: TextStyle(
-                    color: KWhiteColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 26.0
-                  ),
+                      color: KWhiteColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26.0),
                 ),
               ),
             ],

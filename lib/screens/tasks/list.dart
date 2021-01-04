@@ -17,19 +17,7 @@ class _TaskListState extends State<TaskList> {
   final _storage = FlutterSecureStorage();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String actionType = 'clockin';
-
-  _showMsg(msg) {
-    final snackBar = SnackBar(
-      content: Text(msg),
-      action: SnackBarAction(
-        label: 'Close',
-        onPressed: () {
-          // Some code to undo the change!
-        },
-      ),
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
-  }
+  bool isLoading = true;
 
   void _submitData() async {
     final geoposition = await Geolocator.getCurrentPosition(
@@ -77,203 +65,216 @@ class _TaskListState extends State<TaskList> {
       }
     } catch (e) {
       print(e);
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   void initState() {
     super.initState();
+    isLoading = false;
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                width: size.width * 0.3,
-                height: size.height / 17,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: KGACTIVE,
-                  ),
-                  borderRadius: BorderRadius.circular(29),
-                  color: Colors.blue,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(29),
-                  child: FlatButton(
-                    onPressed: () async {
-                      _submitData();
-                    },
-                    color: KGACTIVE,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Clock In',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Container(
-                          width: 29,
-                          height: 21,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                            shape: BoxShape.circle,
+    return Center(
+      child: isLoading
+          ? CircularProgressIndicator()
+          : Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        width: size.width * 0.3,
+                        height: size.height / 17,
+                        decoration: BoxDecoration(
+                          border: Border.all(
                             color: KGACTIVE,
                           ),
+                          borderRadius: BorderRadius.circular(29),
+                          color: Colors.blue,
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: 20),
-            Expanded(
-              child: Container(
-                width: size.width * 0.3,
-                height: size.height / 17,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: KGACTIVE,
-                  ),
-                  borderRadius: BorderRadius.circular(29),
-                  color: Colors.blue,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(29),
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/camera');
-                    },
-                    color: KGACTIVE,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Shelve Pic',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Container(
-                          width: 29,
-                          height: 21,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                            shape: BoxShape.circle,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(29),
+                          child: FlatButton(
+                            onPressed: () async {
+                              _submitData();
+                              setState(() {
+                                isLoading = true;
+                              });
+                            },
                             color: KGACTIVE,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Clock In',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Container(
+                                  width: 29,
+                                  height: 21,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    color: KGACTIVE,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 20.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                width: size.width * 0.3,
-                height: size.height / 17,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: KGACTIVE,
-                  ),
-                  borderRadius: BorderRadius.circular(29),
-                  color: Colors.blue,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(29),
-                  child: FlatButton(
-                    onPressed: () {},
-                    color: KGACTIVE,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Stock Take',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Container(
-                          width: 29,
-                          height: 21,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                            shape: BoxShape.circle,
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: Container(
+                        width: size.width * 0.3,
+                        height: size.height / 17,
+                        decoration: BoxDecoration(
+                          border: Border.all(
                             color: KGACTIVE,
                           ),
+                          borderRadius: BorderRadius.circular(29),
+                          color: Colors.blue,
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: 2.0),
-            Expanded(
-              child: Container(
-                width: size.width * 0.3,
-                height: size.height / 17,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: KGACTIVE,
-                  ),
-                  borderRadius: BorderRadius.circular(29),
-                  color: Colors.blue,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(29),
-                  child: FlatButton(
-                    onPressed: () {},
-                    color: KGACTIVE,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Start Shift',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Container(
-                          width: 29,
-                          height: 21,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.black,
-                            ),
-                            shape: BoxShape.circle,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(29),
+                          child: FlatButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/camera');
+                            },
                             color: KGACTIVE,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Shelve Pic',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Container(
+                                  width: 29,
+                                  height: 21,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    color: KGACTIVE,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
+                SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        width: size.width * 0.3,
+                        height: size.height / 17,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: KGACTIVE,
+                          ),
+                          borderRadius: BorderRadius.circular(29),
+                          color: Colors.blue,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(29),
+                          child: FlatButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/stock_take');
+                            },
+                            color: KGACTIVE,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Stock Take',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Container(
+                                  width: 29,
+                                  height: 21,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    color: KGACTIVE,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 2.0),
+                    Expanded(
+                      child: Container(
+                        width: size.width * 0.3,
+                        height: size.height / 17,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: KGACTIVE,
+                          ),
+                          borderRadius: BorderRadius.circular(29),
+                          color: Colors.blue,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(29),
+                          child: FlatButton(
+                            onPressed: () {},
+                            color: KGACTIVE,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Start Shift',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Container(
+                                  width: 29,
+                                  height: 21,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black,
+                                    ),
+                                    shape: BoxShape.circle,
+                                    color: KGACTIVE,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
-      ],
     );
   }
 }
