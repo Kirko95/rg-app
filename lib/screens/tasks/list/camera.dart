@@ -6,7 +6,7 @@ import 'package:rg/constants/theme.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-
+/////////////IMPORT DIO
 class Camera extends StatefulWidget {
   _CameraState createState() => _CameraState();
 }
@@ -26,14 +26,13 @@ class _CameraState extends State<Camera> {
       
     });
   }
-
+ String path = _image.path;
+ String filename = path.split('/').last;
+  //////////////////////////////////////REMOVE/COMMENT OUT THIS////////////////
   void _uploadImage(_image) async {
-    var accessToken = await _storage.read(key: "token");
-    String filename = _image.path.split('/');
+    var accessToken = await _storage.read(key: "token");    
     String base64image = base64Encode(_image.readAsBytesSync());
-
     print(filename);
-
     http.post('http://campaign.redgiant.co.ke/api/shelf', body: {
       'photo': base64image,
       'name': filename
@@ -44,8 +43,33 @@ class _CameraState extends State<Camera> {
     }).catchError((error) {
       print(error);
     });
-  }
+  }  
+ ////////////////////////////////////TRY USING THIS///////////////////////////// 
+  Future<void> _uploadFileAsFormData(String path) async {
+  try {
+    final dio = Dio();
+    dio.options.headers = {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
 
+    final file =
+      await MultipartFile.fromFile(path, filename: filename);
+    final formData = FormData.fromMap(
+      {
+       'photo': file,
+      'name': filename
+      }
+    ); // 'file' - this is an api key, can be different
+
+    final response = await dio.post( // or dio.post
+      'http://campaign.redgiant.co.ke/api/shelf',
+      data: formData,
+    );
+  } catch (err) {
+    print('uploading error: $err');
+  }
+}
+//////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
