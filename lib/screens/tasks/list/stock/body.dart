@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rg/constants/theme.dart';
+import 'package:rg/services/api_service.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class Body extends StatefulWidget {
 class _StockTakeState extends State<Body> {
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   bool isLoading = true;
+  final APIService apiService = APIService();
 
   @override
   void initState() {
@@ -40,39 +42,42 @@ class _StockTakeState extends State<Body> {
               ),
             ]
           ),
-          child: Column(
-            key: globalFormKey,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                style: TextStyle(color: KWhiteColor),
-                decoration: InputDecoration(
-                  labelText: "Select Product",
-                  labelStyle: TextStyle(color: Colors.black),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: Colors.grey
-                    )
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: Colors.grey
-                    )
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: Colors.grey
-                    )
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              key: globalFormKey,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                TextFormField(
+                  style: TextStyle(color: KWhiteColor),
+                  decoration: InputDecoration(
+                    labelText: "Select Product",
+                    labelStyle: TextStyle(color: Colors.black),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey
+                      )
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey
+                      )
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey
+                      )
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          )
         )
       ),
     );

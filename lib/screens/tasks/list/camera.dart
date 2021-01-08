@@ -18,13 +18,18 @@ class _CameraState extends State<Camera> {
   final _storage = FlutterSecureStorage();
   bool isLoading = true;
   final file = <http.MultipartFile>[];
+
+  @override
+  void initState(){
+    super.initState();
+    isLoading = false;
+  }
   
-
-
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
       _image = File(pickedFile.path);
+      isLoading = false;
     });
   }
 
@@ -32,8 +37,15 @@ class _CameraState extends State<Camera> {
     String path = _image.path;
     uploadImage(path).then((value){
       print("Success");
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.pushNamed(context, '/tasks');
     }).catchError((error){
       print(error);
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -73,59 +85,65 @@ class _CameraState extends State<Camera> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Container(
+      body: isLoading
+      ? 
+        Center(child: CircularProgressIndicator())
+      : Container(
         child: _image == null
-            ? Center(
-                child: Text(
-                'Take a photo of the shelve..',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0),
-              ))
-            : Container(
-                padding: EdgeInsets.all(19.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Please ensure its a photo of shelve',
-                      style: TextStyle(
-                          color: KWhiteColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                    SizedBox(height: 18.0),
-                    Container(
-                      child: Image.file(_image),
-                    ),
-                    SizedBox(height: 18.0),
-                    Container(
-                      width: size.width / 0.5,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child: FlatButton(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
-                          color: Colors.red,
-                          onPressed: () {
-                            _uploadImage();
-                          },
-                          child: Text(
-                            'UPLOAD',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+        ? Center(
+            child: Text(
+            'Take a photo of the shelve..',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0),
+          ))
+        : Container(
+            padding: EdgeInsets.all(19.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Please ensure its a photo of shelve',
+                  style: TextStyle(
+                      color: KWhiteColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                ),
+                SizedBox(height: 18.0),
+                Container(
+                  child: Image.file(_image),
+                ),
+                SizedBox(height: 18.0),
+                Container(
+                  width: size.width / 0.5,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: FlatButton(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 10),
+                      color: Colors.red,
+                      onPressed: () {
+                        _uploadImage();
+                        setState(() {
+                          isLoading = true;
+                        });
+                      },
+                      child: Text(
+                        'UPLOAD',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-      ),
+              ],
+            ),
+          ),
+        ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
         tooltip: 'Take Photo',

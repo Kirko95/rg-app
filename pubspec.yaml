@@ -28,6 +28,7 @@ dependencies:
   geolocator:
   intl:
   dio: ^3.0.10
+  dropdown_formfield: ^0.1.3
   flutter:
     sdk: flutter
 

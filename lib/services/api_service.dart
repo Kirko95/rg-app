@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:rg/models/login_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:rg/models/products.dart';
 
 class APIService {
   static const String url = 'https://campaign.redgiant.co.ke/api/';
@@ -29,6 +30,22 @@ class APIService {
       );
     } else {
       throw Exception('Failed to load Data');
+    }
+  }
+
+  static Future<List<Product>> getProducts() async {
+    try{
+      final response = await http.get(url+'products', headers: _setHeaders());
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+
+        List<Product> products = body.map((dynamic item) => Product.fromJson(item)).toList();
+
+        return products;
+     }
+    }catch(e){
+      print(e);
+      throw "Can't get products";
     }
   }
 }

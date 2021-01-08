@@ -15,7 +15,6 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   TimeSheetRequestModel requestModel;
   final _storage = FlutterSecureStorage();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   String actionType = 'clockin';
   bool isLoading = true;
 
@@ -48,16 +47,7 @@ class _TaskListState extends State<TaskList> {
 
       if (response.statusCode == 200) {
         jsonResponse = json.decode(response.body);
-        print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
-
-        if (jsonResponse != null) {
-         final snackBar = SnackBar(
-           content: Text('Successful login'),
-         );
-        _scaffoldKey.currentState
-            .showSnackBar(snackBar);
-        }
       } else {
         setState(() {
           print(json.decode(response.body)['error']);
